@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/TestPE/app/src/main/res/layout/activity_main.xml" value="0.21036585365853658" />
         <entry key="..\:/TestPE/app/src/main/res/layout/item_employee.xml" value="0.1" />
+        <entry key="..\:/code/PRM392/android-crud-room-db/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/code/PRM392/android-crud-room-db/app/src/main/res/layout/activity_update.xml" value="0.1" />
+        <entry key="..\:/code/PRM392/android-crud-room-db/app/src/main/res/layout/item_employee.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -1,6 +1,9 @@
 package com.example.testpe;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.service.autofill.UserData;
 import android.text.TextUtils;
@@ -11,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int MY_REQUEST_CODE = 10;
     private EditText edtId;
     private EditText edtName;
     private EditText edtAge;
@@ -43,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
             public void updateEmployee(Employee employee) {
                 clickUpdateEmployee(employee);
             }
+
+            @Override
+            public void deleteEmployee(Employee employee) {
+                clickDeleteEmployee(employee);
+            }
         });
         mListEmployee = new ArrayList<>();
         employeeAdapter.setData(mListEmployee);
@@ -58,11 +68,26 @@ public class MainActivity extends AppCompatActivity {
                 AddEmployee();
             }
         });
+
         loadData();
     }
 
-    private void clickUpdateEmployee(Employee employee) {
+    private void clickDeleteEmployee(Employee employee) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm delete user?")
+                .setMessage("Are you sure?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Delete user
+                        EmployeeDatabase.getInstance(MainActivity.this).employeeDAO().deleteEmployee(employee);
+                        Toast.makeText(MainActivity.this, "Delete user success", Toast.LENGTH_SHORT).show();
 
+                        loadData();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     private void AddEmployee() {
@@ -87,9 +112,12 @@ public class MainActivity extends AppCompatActivity {
         edtName.setText("");
         edtAge.setText("");
 
+
         hideSoftKeyboard();
 
-
+        loadData();
+        mListEmployee = EmployeeDatabase.getInstance(this).employeeDAO().getListEmployee();
+        employeeAdapter.setData(mListEmployee);
     }
 
     public void hideSoftKeyboard(){
@@ -116,5 +144,21 @@ public class MainActivity extends AppCompatActivity {
     private boolean isEmployeeExist(Employee employee){
         List<Employee> list = EmployeeDatabase.getInstance(this).employeeDAO().checkEmployee(employee.getName());
         return list!= null && !list.isEmpty();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == MY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            loadData();
+        }
+    }
+    private void clickUpdateEmployee(Employee employee) {
+        Intent intent = new Intent(MainActivity.this, UpdateActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("object_employee", employee);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, MY_REQUEST_CODE);
     }
 }

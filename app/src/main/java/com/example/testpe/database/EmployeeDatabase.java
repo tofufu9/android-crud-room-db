@@ -22,5 +22,5 @@ public abstract class EmployeeDatabase extends RoomDatabase {
         }
         return  instance;
     }
-    public  abstract EmployeeDAO employeeDAO();
+    public abstract EmployeeDAO employeeDAO();
 }

@@ -18,6 +18,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.UserVi
 
     public interface IClickItemEmployee {
         void updateEmployee(Employee employee);
+
+        void deleteEmployee(Employee employee);
     }
 
     public EmployeeAdapter(IClickItemEmployee iClickItemEmployee) {
@@ -51,6 +53,13 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.UserVi
                 iClickItemEmployee.updateEmployee(employee);
             }
         });
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            iClickItemEmployee.deleteEmployee(employee);
+            }
+        });
     }
 
     @Override
@@ -67,6 +76,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.UserVi
         private TextView tvName;
         private TextView tvAge;
         private Button btnUpdate;
+        private Button btnDelete;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +85,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.UserVi
             tvName = itemView.findViewById(R.id.tv_name);
             tvAge = itemView.findViewById(R.id.tv_age);
             btnUpdate = itemView.findViewById(R.id.btn_update);
+            btnDelete = itemView.findViewById(R.id.btn_delete);
+
         }
     }
 }
